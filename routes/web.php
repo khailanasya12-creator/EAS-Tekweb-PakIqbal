@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\RegisteredUserController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
+use App\Models\Item;
 use Illuminate\Support\Facades\Auth;
 
 // Redirect root ke login
@@ -26,9 +27,10 @@ Route::middleware(['auth', 'role:superadmin'])->group(function () {
 
 // --- RUTE ROLE: ADMIN & SUPER ADMIN ---
 Route::middleware(['auth', 'role:superadmin,admin'])->group(function () {
-// Pastikan bagian ->name('dashboard') sudah ada
-Route::get('/dashboard', [AdminController::class, 'superAdminDashboard'])->name('dashboard');
-    // Fitur Manajemen User
+    // Dashboard
+    Route::get('/admin/dashboard', [AdminController::class, 'dashboardTeman'])->name('dashboard');
+
+    // Manajemen User
     Route::post('/admin/user/{id}/jabatan', [AdminController::class, 'updateJabatan'])->name('admin.user.update.jabatan');
     Route::post('/admin/user/{id}/role', [AdminController::class, 'role'])->name('admin.user.role');
     Route::post('/admin/user/{id}/toggle', [AdminController::class, 'toggle'])->name('admin.user.toggle');
@@ -36,14 +38,15 @@ Route::get('/dashboard', [AdminController::class, 'superAdminDashboard'])->name(
     Route::get('/admin/approve/{id}', [RegisteredUserController::class, 'approveUser'])->name('admin.approve');
 
     // Fitur Barang
-    Route::get('/barang', [ItemController::class, 'index'])->name('barang.index');
-    Route::post('/barang', [ItemController::class, 'store'])->name('barang.store');
+    Route::get('/admin/barang', [ItemController::class, 'index'])->name('barang.index');
+    Route::post('/admin/barang', [ItemController::class, 'store'])->name('barang.store');
+    Route::delete('/admin/barang/{id}', [ItemController::class, 'destroy'])->name('barang.destroy');
 });
 
-// --- RUTE ROLE: STAFF (Umum) ---
+// --- RUTE ROLE: STAFF ---
 Route::middleware(['auth'])->group(function () {
-    // FIX: Mengarahkan langsung ke dashboard admin yang sudah ada agar tidak error
-Route::get('/admin/admdash', [AdminController::class, 'dashboardTeman'])->name('admin.admdash');});
+    Route::get('/admin/admdash', [AdminController::class, 'dashboardTeman'])->name('admin.admdash');
+});
 
 // Google Auth
 Route::get('/auth/google', fn() => Socialite::driver('google')->redirect())->name('google.login');
@@ -56,15 +59,11 @@ Route::get('/auth/google/callback', function () {
         'email_verified_at' => now(),
     ]);
     Auth::login($user);
-
     if ($user->role === 'superadmin') return redirect()->route('superadmin.dashboard');
-    if ($user->role === 'admin') return redirect()->route('admin.dashboard');
     return redirect()->route('dashboard');
 });
-Route::get('/check-approval/{email}', [RegisteredUserController::class, 'checkApproval']);
-// Rute Publik
-Route::post('/verify-otp', [RegisteredUserController::class, 'verifyOtp'])->name('verify.otp');
-Route::get('/admin/approve/{id}', [RegisteredUserController::class, 'approveUser'])->name('admin.approve');
 
+Route::get('/check-approval/{email}', [RegisteredUserController::class, 'checkApproval']);
+Route::post('/verify-otp', [RegisteredUserController::class, 'verifyOtp'])->name('verify.otp');
 
 require __DIR__.'/auth.php';

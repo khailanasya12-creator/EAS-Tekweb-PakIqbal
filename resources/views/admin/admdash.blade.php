@@ -31,11 +31,11 @@
 
         .sidebar-brand {
             font-size: 2.1rem;
-            font-weight: 700;
+            font-weight: 800; /* Font sedikit ditebalkan seperti Super Admin */
             color: #ffffff;
             padding-left: 24px;
             margin-bottom: 55px;
-            letter-spacing: -0.5px;
+            letter-spacing: -1px; /* Jarak huruf dirapatkan sesuai desain */
         }
 
         .sidebar-brand span {
@@ -117,9 +117,10 @@
 
     <div class="sidebar">
         <div class="sidebar-brand">Logis<span>Tix</span></div>
+
         <div class="d-flex flex-column w-100">
             <div class="nav-item active-menu">
-                <a href="#" class="nav-link">
+                <a href="{{ route('dashboard') }}" class="nav-link">
                     <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
                     Dashboard
                 </a>

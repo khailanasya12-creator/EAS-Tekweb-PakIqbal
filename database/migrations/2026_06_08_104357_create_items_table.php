@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('items', function (Blueprint $table) {
             $table->id();
             $table->string('kode_barang')->unique(); // ID unik barang (BRG001, dst)
-            $table->string('nama_barang');          // Nama barang (Kardus Besar, dll)
+            $table->string('nama_barang');          // Nama barang
+            $table->string('kategori')->nullable(); // TAMBAHAN: Kolom kategori
             $table->integer('stok')->default(0);    // Jumlah stok
             $table->timestamps();                   // created_at dan updated_at
         });
