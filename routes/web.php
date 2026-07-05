@@ -46,6 +46,8 @@ Route::middleware(['auth', 'role:superadmin,admin'])->group(function () {
     Route::get('/admin/barang', [ItemController::class, 'index'])->name('barang.index');
     Route::post('/admin/barang', [ItemController::class, 'store'])->name('barang.store');
     Route::delete('/admin/barang/{id}', [ItemController::class, 'destroy'])->name('barang.destroy');
+    Route::get('/admin/barang/{id}/edit', [ItemController::class, 'edit'])->name('barang.edit');
+    Route::put('/admin/barang/{id}', [ItemController::class, 'update'])->name('barang.update');
 
     // Fitur Stok
     Route::get('/admin/stok', [StokController::class, 'index'])->name('stok.index');

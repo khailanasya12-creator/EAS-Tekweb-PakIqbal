@@ -67,32 +67,80 @@
             <div class="card-custom mb-4">
                 <h5 class="fw-bold mb-3">Tambah Barang</h5>
                 <form action="{{ route('barang.store') }}" method="POST" class="row g-2">
-                    @csrf
-                    <div class="col-md-4"><input type="text" name="nama_barang" class="form-control" placeholder="Nama Barang" required></div>
-                    <div class="col-md-3">
-                        <select name="kategori" class="form-select" required>
-                            <option value="" disabled selected>Pilih Kategori</option>
-                            <option value="Elektronik">Elektronik</option>
-                            <option value="Fashion">Fashion</option>
-                            <option value="Meubel">Meubel</option>
-                            <option value="ATK">ATK</option>
-                            <option value="Aksesoris">Aksesoris</option>
-                            <option value="Makeup">Makeup</option>
-                        </select>
-                    </div>
-                    <div class="col-md-2"><input type="number" name="stok" class="form-control" placeholder="Stok" required></div>
-                    <div class="col-md-2"><button type="submit" class="btn btn-primary w-100">Simpan</button></div>
-                </form>
+    @csrf
+
+    <div class="col-md-3">
+        <input type="text"
+               name="nama_barang"
+               class="form-control"
+               placeholder="Nama Barang"
+               required>
+    </div>
+
+    <div class="col-md-2">
+        <select name="kategori" class="form-select" required>
+            <option value="" disabled selected>Pilih Kategori</option>
+            <option value="Elektronik">Elektronik</option>
+            <option value="Fashion">Fashion</option>
+            <option value="Meubel">Meubel</option>
+            <option value="ATK">ATK</option>
+            <option value="Aksesoris">Aksesoris</option>
+            <option value="Makeup">Makeup</option>
+        </select>
+             </div>
+
+             <div class="col-md-2">
+             <input type="number"
+               name="harga"
+               class="form-control"
+               placeholder="Harga"
+               required>
+              </div>
+
+            <div class="col-md-2">
+                <input type="number"
+               name="stok"
+               class="form-control"
+               placeholder="Stok"
+               required>
+             </div>
+
+             <div class="col-md-3">
+                <button type="submit" class="btn btn-primary w-100">Simpan</button>
+            </div>
+        </form>
             </div>
 
             <div class="card-custom">
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="fw-bold">Daftar Barang</h5>
-                    <input type="text" id="searchInput" class="form-control w-25" placeholder="Cari nama barang...">
-                </div>
+
+    <h5 class="fw-bold">Daftar Barang</h5>
+
+    <div class="d-flex gap-2">
+
+        <form method="GET" action="{{ route('barang.index') }}">
+            <select name="currency" class="form-select" style="width: 100px;" onchange="this.form.submit()">
+                <option value="IDR" {{ $currency == 'IDR' ? 'selected' : '' }}>IDR</option>
+                <option value="USD" {{ $currency == 'USD' ? 'selected' : '' }}>USD</option>
+                <option value="EUR" {{ $currency == 'EUR' ? 'selected' : '' }}>EUR</option>
+                <option value="JPY" {{ $currency == 'JPY' ? 'selected' : '' }}>JPY</option>
+                <option value="SGD" {{ $currency == 'SGD' ? 'selected' : '' }}>SGD</option>
+
+            </select>
+        </form>
+
+        <input
+            type="text"
+            id="searchInput"
+            class="form-control"
+            placeholder="Cari nama barang...">
+
+    </div>
+
+</div>
                 <table class="table table-hover text-center" id="barangTable">
                     <thead class="table-light">
-                        <tr><th>Kode</th><th>Nama Barang</th><th>Kategori</th><th>Stok</th><th>Aksi</th></tr>
+                        <tr><th>Kode</th><th>Nama Barang</th><th>Kategori</th><th>Harga</th><th>Stok</th><th>Aksi</th></tr>
                     </thead>
                     <tbody>
                         @foreach($items as $item)
@@ -100,8 +148,18 @@
                             <td>{{ $item->kode_barang }}</td>
                             <td>{{ $item->nama_barang }}</td>
                             <td>{{ $item->kategori ?? '-' }}</td>
+                            <td>
+                        @if($currency == 'IDR')Rp {{ number_format($item->harga, 0, ',', '.') }}
+                    @else{{ $currency }} {{ number_format($item->harga * $rate, 2) }}
+                        @endif
+                        </td>
                             <td>{{ $item->stok }}</td>
                             <td>
+
+                                <div class="d-flex gap-2">
+                                <a href="{{ route('barang.edit', $item->id) }}" class="btn btn-sm btn-primary">
+                                        Edit
+                                </a>
                                 <form action="{{ route('barang.destroy', $item->id) }}" method="POST">
                                     @csrf @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-outline-danger">Hapus</button>

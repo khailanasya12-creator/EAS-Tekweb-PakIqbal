@@ -13,7 +13,8 @@ class Item extends Model
     protected $fillable = [
         'kode_barang',
         'nama_barang',
-        'kategori', // <--- INI WAJIB ADA
+        'kategori',
+        'harga', // <--- INI WAJIB ADA
         'stok'
     ];
 
