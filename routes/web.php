@@ -90,7 +90,6 @@ Route::get('/auth/google/callback', function () {
     return redirect()->route('dashboard');
 });
 
-
 // --- LAIN-LAIN (APPROVAL & OTP) ---
 Route::get('/check-approval/{email}', [RegisteredUserController::class, 'checkApproval']);
 Route::post('/verify-otp', [RegisteredUserController::class, 'verifyOtp'])->name('verify.otp');
