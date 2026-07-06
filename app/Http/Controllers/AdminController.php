@@ -20,10 +20,10 @@ class AdminController extends Controller
         $dataTransaksiBulan = array_fill(0, 12, 0);
 
         // OPTIMASI: Mengambil total transaksi per bulan dalam 1x Query (Disesuaikan untuk SQLite)
-        $monthlyTotals = Transaction::selectRaw("strftime('%m', created_at) as month, SUM(jumlah) as total")
-            ->whereYear('created_at', date('Y'))
-            ->groupBy('month')
-            ->pluck('total', 'month');
+        $monthlyTotals = Transaction::selectRaw("MONTH(created_at) as month, SUM(jumlah) as total")
+    ->whereYear('created_at', date('Y'))
+    ->groupByRaw("MONTH(created_at)")
+    ->pluck('total', 'month');
 
         // Memasukkan data ke dalam array sesuai bulannya
         foreach ($monthlyTotals as $month => $total) {
